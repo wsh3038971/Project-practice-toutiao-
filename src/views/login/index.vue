@@ -75,7 +75,19 @@ export default {
     login () {
       this.$refs.loginForm.validate((isOk) => {
         if (isOk) {
-          this.$message({ type: 'success', message: 'ok' })
+          this.$axios({
+            url: '/authorizations',
+            method: 'post',
+            data: this.loginForm
+          }).then(result => {
+            console.log(result)
+            // 将获取的token放入前端缓存中
+            window.localStorage.setItem('user-token', result.data.data.token)
+            // 登陆成功后跳转到首页(编程式导航)
+            this.$router.push('/home')
+          }).catch(() => {
+            this.$message({ type: 'warning', message: '输入有误' })
+          })
         } else {
           this.$message({ type: 'warning', message: 'error' })
         }
