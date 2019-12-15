@@ -14,7 +14,11 @@ export default new Router({
     {
       path: '/home',
       name: 'home',
-      component: Home
+      component: Home,
+      children: [{
+        path: 'comment',
+        component: () => import('./views/comment')
+      }]
     }
     // {
     //   path: '/about',
