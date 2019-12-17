@@ -82,11 +82,9 @@ export default {
           }).then(result => {
             console.log(result)
             // 将获取的token放入前端缓存中
-            window.localStorage.setItem('user-token', result.data.data.token)
+            window.localStorage.setItem('user-token', result.data.token)
             // 登陆成功后跳转到首页(编程式导航)
             this.$router.push('/home')
-          }).catch(() => {
-            this.$message({ type: 'warning', message: '输入有误' })
           })
         } else {
           this.$message({ type: 'warning', message: 'error' })
