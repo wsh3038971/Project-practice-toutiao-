@@ -44,7 +44,6 @@ export default {
     },
     handleMenu: function (command) {
       if (command === 'account') {
-
       } else if (command === 'git') {
 
       } else {
