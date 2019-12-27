@@ -2,8 +2,8 @@
   <!-- 最外层容器 -->
   <el-container>
     <!-- 左侧 -->
-    <el-aside style="width: 200px">
-      <layout-aside></layout-aside>
+    <el-aside style="width: 200px;">
+      <layout-aside style="height: 100%;position: fixed"></layout-aside>
     </el-aside>
     <!-- 右侧整体 -->
     <el-container>

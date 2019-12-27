@@ -16,6 +16,15 @@
                         </el-row>
                     </el-card>
                 </div>
+                <el-pagination
+                    align="center"
+                    :page-size="page.pageSize"
+                    :current-page="page.page"
+                    @current-change="pageChange"
+                    background
+                    layout="prev, pager, next"
+                    :total="page.total">
+                </el-pagination>
             </el-tab-pane>
             <el-tab-pane label="收藏" name="second">
                 <div class="card_list">
@@ -23,6 +32,15 @@
                         <img :src="item.url" alt="">
                     </el-card>
                 </div>
+                <el-pagination
+                    align="center"
+                    :page-size="page.pageSize"
+                    :current-page="page.page"
+                    @current-change="pageChange"
+                    background
+                    layout="prev, pager, next"
+                    :total="page.total">
+                </el-pagination>
             </el-tab-pane>
         </el-tabs>
     </el-card>
@@ -33,12 +51,23 @@ export default {
   data () {
     return {
       activeName: 'first',
-      list: []
+      list: [],
+      page: {
+        page: 1,
+        pageSize: 20,
+        total: 0
+      }
     }
   },
   methods: {
+    // 分页
+    pageChange: function (e) {
+      this.page.page = e
+      this.getMaterial()
+    },
     // tab切换
     handleClick: function () {
+      this.page.page = 1
       this.getMaterial()
     },
     // 初始数据
@@ -46,11 +75,14 @@ export default {
       this.$axios({
         url: '/user/images',
         params: {
-          collect: this.activeName === 'second'
+          collect: this.activeName === 'second',
+          page: this.page.page,
+          per_page: this.page.pageSize
         }
       }).then(res => {
         console.log(res)
         this.list = res.data.results
+        this.page.total = res.data.total_count
       })
     }
   },
@@ -65,7 +97,6 @@ export default {
         .card_list {
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;
             .img_card {
                 width: 180px;
                 height: 180px;
