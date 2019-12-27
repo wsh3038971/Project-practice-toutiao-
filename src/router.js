@@ -22,6 +22,10 @@ export default new Router({
       children: [{
         path: 'comment',
         component: () => import('./views/comment')
+      },
+      {
+        path: 'material',
+        component: () => import('./views/material')
       }]
     }
     // {
