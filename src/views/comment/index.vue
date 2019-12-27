@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <el-card v-loading="loading">
     <bread-crumb slot="header">
       <template slot="title">评论列表</template>
     </bread-crumb>
@@ -33,6 +33,7 @@
 export default {
   data () {
     return {
+      loading: false,
       list: [],
       page: {
         page: 1,
@@ -79,6 +80,7 @@ export default {
     },
     // 获取评论数据
     getComment: function () {
+      this.loading = true
       this.$axios({
         url: '/articles',
         params: {
@@ -87,6 +89,7 @@ export default {
           per_page: this.page.pageSize
         }
       }).then(res => {
+        this.loading = false
         console.log('列表数据', res)
         this.list = res.data.results
         this.page.page = res.data.page
