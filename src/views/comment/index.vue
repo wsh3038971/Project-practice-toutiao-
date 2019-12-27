@@ -15,6 +15,17 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 分页 -->
+    <el-pagination
+      @current-change="pageChange"
+      :current-page="page.page"
+      style="margin: 10px 0"
+      align="center"
+      background
+      layout="prev, pager, next"
+      :size-change="page.pageSize"
+      :total="page.total">
+    </el-pagination>
   </el-card>
 </template>
 
@@ -22,10 +33,21 @@
 export default {
   data () {
     return {
-      list: []
+      list: [],
+      page: {
+        page: 1,
+        pageSize: 10,
+        total: 0
+      }
     }
   },
   methods: {
+    // 分页改变
+    pageChange: function (e) {
+      console.log(e)
+      this.page.page = e
+      this.getComment()
+    },
     // 打开或关闭评论按钮
     openOrClose: function (row) {
       let mess = row.comment_status ? '关闭' : '打开'
@@ -60,11 +82,15 @@ export default {
       this.$axios({
         url: '/articles',
         params: {
-          response_type: 'comment'
+          response_type: 'comment',
+          page: this.page.page,
+          per_page: this.page.pageSize
         }
       }).then(res => {
         console.log('列表数据', res)
         this.list = res.data.results
+        this.page.page = res.data.page
+        this.page.total = res.data.total_count
       })
     }
   },
