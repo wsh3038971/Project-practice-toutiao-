@@ -11,7 +11,7 @@
                     <el-card class="img_card" v-for="(item,index) in list" :key="index">
                         <img :src="item.url" alt="">
                         <el-row type="flex" align="middle" justify="space-around" class="operate">
-                            <i :style="{color: item.is_collected ? 'red' : '#303133'}" class="el-icon-star-on"></i>
+                            <i @click="collect(item)" :style="{color: item.is_collected ? 'red' : '#303133'}" class="el-icon-star-on"></i>
                             <i @click="delImg(item)" class="el-icon-delete-solid"></i>
                         </el-row>
                     </el-card>
@@ -60,6 +60,19 @@ export default {
     }
   },
   methods: {
+    // 收藏或取消收藏
+    collect: function (item) {
+      this.$axios({
+        url: `/user/images/${item.id}`,
+        method: 'put',
+        data: {
+          collect: !item.is_collected
+        }
+      }).then(res => {
+        console.log(res)
+        this.getMaterial()
+      })
+    },
     // 删除图片
     delImg: function (item) {
       console.log(item)
@@ -127,6 +140,9 @@ export default {
                     bottom: 0;
                     left: 0;
                     font-size: 20px;
+                    i {
+                      cursor:pointer;
+                    }
                 }
             }
         }
