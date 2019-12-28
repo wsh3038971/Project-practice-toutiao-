@@ -12,7 +12,7 @@
                         <img :src="item.url" alt="">
                         <el-row type="flex" align="middle" justify="space-around" class="operate">
                             <i :style="{color: item.is_collected ? 'red' : '#303133'}" class="el-icon-star-on"></i>
-                            <i class="el-icon-delete-solid"></i>
+                            <i @click="delImg(item)" class="el-icon-delete-solid"></i>
                         </el-row>
                     </el-card>
                 </div>
@@ -60,6 +60,19 @@ export default {
     }
   },
   methods: {
+    // 删除图片
+    delImg: function (item) {
+      console.log(item)
+      this.$confirm('确定删除吗', '提示').then(() => {
+        this.$axios({
+          url: `/user/images/${item.id}`,
+          method: 'delete'
+        }).then(res => {
+          console.log(res)
+          this.getMaterial()
+        })
+      })
+    },
     // 分页
     pageChange: function (e) {
       this.page.page = e

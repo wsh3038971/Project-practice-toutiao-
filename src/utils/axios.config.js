@@ -7,7 +7,8 @@ import jsonBigInt from 'json-bigint'
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0'
 // 大数字处理
 axios.defaults.transformResponse = [function (data) {
-  return jsonBigInt.parse(data)
+  // 如果有返回值则进行大数字处理,如果没有返回值则为空对象
+  return data ? jsonBigInt.parse(data) : {}
 }]
 
 // 请求拦截器
