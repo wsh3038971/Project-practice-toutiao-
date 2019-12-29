@@ -36,11 +36,11 @@
             <div v-for="(item,index) in list" :key="index" class="every">
                 <!-- 左侧 -->
                 <div class="left">
-                    <img src="../../assets/img/404.png" alt="">
+                    <img :src="item.cover.images.length ? item.cover.images[0] : address" alt="">
                     <div class="info">
-                        <span>有内鬼,取消交易</span>
-                        <el-tag style="width: 60px">已发表</el-tag>
-                        <span class="date">2019年12月29日12:49:32</span>
+                        <span>{{item.title}}</span>
+                        <el-tag style="width: 75px">{{item.status | statusText}}</el-tag>
+                        <span class="date">{{item.pubdate}}</span>
                     </div>
                 </div>
                 <!-- 右侧 -->
@@ -57,7 +57,37 @@
 export default {
   data () {
     return {
-      list: [1, 2, 3, 4, 5, 6, 7]
+      list: [1, 2, 3, 4, 5, 6, 7],
+      address: require('../../assets/img/404.png')
+    }
+  },
+  methods: {
+    getArticles: function () {
+      this.$axios({
+        url: '/articles'
+      }).then(res => {
+        console.log(res)
+        this.list = res.data.results
+      })
+    }
+  },
+  created: function () {
+    this.getArticles()
+  },
+  filters: {
+    statusText: function (value) {
+      switch (value) {
+        case 0:
+          return '草稿'
+        case 1:
+          return '待审核'
+        case 2:
+          return '审核通过'
+        case 3:
+          return '审核失败'
+        default:
+          break
+      }
     }
   }
 }
