@@ -8,22 +8,30 @@
         <!-- 搜索栏 -->
         <el-form style="margin-left: 40px">
             <el-form-item label="文章状态">
-                <el-radio-group>
-                    <el-radio label="线上品牌商赞助">全部</el-radio>
-                    <el-radio label="线下场地免费">草稿</el-radio>
-                    <el-radio label="线下场地免费">待审核</el-radio>
-                    <el-radio label="线下场地免费">审核通过</el-radio>
-                    <el-radio label="线下场地免费">审核失败</el-radio>
+                <el-radio-group @change="changeRadio" v-model="searchForm.status">
+                    <el-radio :label="5">全部</el-radio>
+                    <el-radio :label="0">草稿</el-radio>
+                    <el-radio :label="1">待审核</el-radio>
+                    <el-radio :label="2">审核通过</el-radio>
+                    <el-radio :label="3">审核失败</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="频道列表">
-                <el-select></el-select>
+                <el-select @change="changeRadio" v-model="searchForm.channels_id">
+                    <el-option
+                        v-for="item in channels"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id">
+                    </el-option>
+                </el-select>
             </el-form-item>
             <el-form-item label="时间选择">
                 <el-date-picker
-                    v-model="value1"
-                    type="datetimerange"
-                    range-separator="至"
+                    @change="changeRadio"
+                    value-format="yyyy-MM-dd"
+                    v-model="searchForm.dateRange"
+                    type="daterange"
                     start-placeholder="开始日期"
                     end-placeholder="结束日期">
                 </el-date-picker>
@@ -58,10 +66,42 @@ export default {
   data () {
     return {
       list: [1, 2, 3, 4, 5, 6, 7],
-      address: require('../../assets/img/404.png')
+      address: require('../../assets/img/404.png'),
+      searchForm: {
+        //   表单数据对象
+        status: 5,
+        channels_id: null,
+        dateRange: ''
+      },
+      channels: []
     }
   },
   methods: {
+
+    // 单选框改变
+    changeRadio: function () {
+      this.$axios({
+        url: '/articles',
+        params: {
+          status: this.searchForm.status === 5 ? null : this.searchForm.status,
+          channels_id: this.searchForm.channels_id,
+          begin_pubdate: this.searchForm.dateRange > 0 ? this.searchForm.dateRange[0] : null,
+          end_pubdate: this.searchForm.dateRange > 1 ? this.searchForm.dateRange[1] : null
+        }
+      }).then(res => {
+        this.list = res.data.results
+      })
+    },
+    // 获取文章频道
+    getChannels: function () {
+      this.$axios({
+        url: '/channels'
+      }).then(res => {
+        console.log(res)
+        this.channels = res.data.channels
+      })
+    },
+    // 初始数据
     getArticles: function () {
       this.$axios({
         url: '/articles'
@@ -73,6 +113,7 @@ export default {
   },
   created: function () {
     this.getArticles()
+    this.getChannels()
   },
   filters: {
     statusText: function (value) {
