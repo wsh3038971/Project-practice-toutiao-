@@ -53,7 +53,7 @@
                 </div>
                 <!-- 右侧 -->
                 <div class="right">
-                    <span><i class="el-icon-edit"></i>修改</span>
+                    <span @click="modifyItem(item)"><i class="el-icon-edit"></i>修改</span>
                     <span @click="delItem(item)"><i class="el-icon-delete"></i>删除</span>
                 </div>
             </div>
@@ -92,6 +92,10 @@ export default {
     }
   },
   methods: {
+    // 修改按钮
+    modifyItem: function (item) {
+      this.$router.push(`/home/publish/${item.id.toString()}`)
+    },
     // 删除按钮
     delItem: function (item) {
       this.$confirm('是否删除', '警告').then(() => {

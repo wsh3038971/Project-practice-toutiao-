@@ -88,10 +88,24 @@ export default {
       }).then(res => {
         this.channels = res.data.channels
       })
+    },
+    // 获取当前文章数据
+    getArticleById: function (articleId) {
+      this.$axios({
+        url: `/articles/${articleId}`
+      }).then(res => {
+        this.formData = res.data
+      })
     }
   },
   created: function () {
+    // 获取频道数据
     this.getChannels()
+    let { articleId } = this.$route.params
+    if (articleId) {
+      console.log(articleId)
+      this.getArticleById(articleId)
+    }
   }
 }
 </script>
