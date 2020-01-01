@@ -66,9 +66,18 @@ export default {
   methods: {
     // 发布文章按钮
     publish: function () {
-      this.$refs.publishForm.validate(function (isOk) {
+      this.$refs.publishForm.validate(isOk => {
         if (isOk) {
-
+          this.$axios({
+            url: '/articles',
+            method: 'post',
+            params: {
+              draft: false
+            },
+            data: this.formData
+          }).then(res => {
+            this.$router.push('/home/articles')
+          })
         }
       })
     },
