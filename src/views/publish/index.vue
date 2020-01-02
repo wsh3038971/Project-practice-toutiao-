@@ -10,9 +10,10 @@
         <el-input style="width: 400px" v-model="formData.title"></el-input>
       </el-form-item>
       <el-form-item label="内容" prop="content">
-        <el-input type="textarea" :rows="6" style="width: 400px" v-model="formData.content"></el-input>
+        <!-- 富文本 -->
+        <quill-editor type="textarea" v-model="formData.content" style="height: 300px"></quill-editor>
       </el-form-item>
-      <el-form-item label="封面">
+      <el-form-item label="封面" style="margin-top: 60px">
         <el-radio-group v-model="formData.cover.type">
           <el-radio :label="1">单图</el-radio>
           <el-radio :label="3">三图</el-radio>
@@ -26,8 +27,8 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="publish">发表文章</el-button>
-        <el-button>存入草稿</el-button>
+        <el-button type="primary" @click="publish(false)">发表文章</el-button>
+        <el-button @click="publish(true)">存入草稿</el-button>
       </el-form-item>
     </el-form>
   </el-card>
@@ -64,15 +65,16 @@ export default {
     }
   },
   methods: {
-    // 发布文章按钮
-    publish: function () {
+    // 发布文章/存入草稿按钮
+    publish: function (draft) {
       this.$refs.publishForm.validate(isOk => {
         if (isOk) {
+          let { articleId } = this.$route.params
           this.$axios({
-            url: '/articles',
-            method: 'post',
+            url: articleId ? `/articles/${articleId}` : '/articles',
+            method: articleId ? 'put' : 'post',
             params: {
-              draft: false
+              draft
             },
             data: this.formData
           }).then(res => {

@@ -4,6 +4,12 @@
 import layoutAside from '../components/home/layout-aside.vue'
 import layoutHeader from '../components/home/layout-header.vue'
 import breadCrumb from './common/bread-crumb.vue'
+// quill富文本
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+import { quillEditor } from 'vue-quill-editor'
 
 // 导出一个对象
 export default {
@@ -13,5 +19,6 @@ export default {
     Vue.component('layout-aside', layoutAside) // 注册左侧导航组件
     Vue.component('layout-header', layoutHeader) // 注册右侧头部组件
     Vue.component('bread-crumb', breadCrumb) // 注册面包屑组件
+    Vue.component('quill-editor', quillEditor) // 注册富文本编辑器
   }
 }

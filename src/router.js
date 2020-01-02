@@ -32,11 +32,11 @@ export default new Router({
         component: () => import('./views/articles')
       },
       {
-        path: 'publish/:articleId',
+        path: 'publish',
         component: () => import('./views/publish')
       },
       {
-        path: 'publish',
+        path: 'publish/:articleId',
         component: () => import('./views/publish')
       }]
     }
