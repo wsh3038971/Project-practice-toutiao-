@@ -14,12 +14,15 @@
         <quill-editor type="textarea" v-model="formData.content" style="height: 300px"></quill-editor>
       </el-form-item>
       <el-form-item label="封面" style="margin-top: 60px">
-        <el-radio-group v-model="formData.cover.type">
+        <el-radio-group @change="changeCovertype" v-model="formData.cover.type">
           <el-radio :label="1">单图</el-radio>
           <el-radio :label="3">三图</el-radio>
           <el-radio :label="0">无图</el-radio>
           <el-radio :label="-1">自动</el-radio>
         </el-radio-group>
+      </el-form-item>
+      <el-form-item>
+        <cover-image :images="formData.cover.images"></cover-image>
       </el-form-item>
       <el-form-item label="频道" prop="channel_id">
         <el-select v-model="formData.channel_id">
@@ -65,6 +68,16 @@ export default {
     }
   },
   methods: {
+    // 封面选择
+    changeCovertype: function () {
+      if (this.formData.cover.type === 1) {
+        this.formData.cover.images = ['']
+      } else if (this.formData.cover.type === 3) {
+        this.formData.cover.images = ['', '', '']
+      } else {
+        this.formData.cover.images = []
+      }
+    },
     // 发布文章/存入草稿按钮
     publish: function (draft) {
       this.$refs.publishForm.validate(isOk => {
