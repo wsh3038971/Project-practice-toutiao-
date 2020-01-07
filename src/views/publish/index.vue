@@ -22,7 +22,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item>
-        <cover-image :images="formData.cover.images"></cover-image>
+        <cover-image @onClickImg="receiveImg" :images="formData.cover.images"></cover-image>
       </el-form-item>
       <el-form-item label="频道" prop="channel_id">
         <el-select v-model="formData.channel_id">
@@ -68,6 +68,17 @@ export default {
     }
   },
   methods: {
+    // 接收子组件传递的url
+    receiveImg: function (url, index) {
+      this.formData.cover.images = this.formData.cover.images.map(function (item, i) {
+        if (i === index) {
+          return url
+        } else {
+          return item
+        }
+      })
+      // this.formData.cover.images[index] = url
+    },
     // 封面选择
     changeCovertype: function () {
       if (this.formData.cover.type === 1) {
