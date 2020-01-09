@@ -13,7 +13,7 @@
         <!-- 富文本 -->
         <quill-editor type="textarea" v-model="formData.content" style="height: 300px"></quill-editor>
       </el-form-item>
-      <el-form-item label="封面" style="margin-top: 60px">
+      <el-form-item label="封面" style="margin-top: 60px" prop="cover">
         <el-radio-group @change="changeCovertype" v-model="formData.cover.type">
           <el-radio :label="1">单图</el-radio>
           <el-radio :label="3">三图</el-radio>
@@ -40,6 +40,24 @@
 <script>
 export default {
   data () {
+    let func = function (rule, value, callBack) {
+      if (value.type === 1) {
+        (value.images.length === 1 && value.images[0]) ? callBack() : callBack(new Error('请设置单图封面'))
+      } else if (value.type === 3) {
+        if (value.images.length === 3 && value.images[0] && value.images[1] && value.images[2]) {
+          callBack()
+        } else {
+          callBack(new Error('请设置三图封面'))
+        }
+      } else {
+        // 无图或者自动
+        if (value.images.length > 0) {
+          callBack(new Error('您的封面设置有误'))
+        } else {
+          callBack()
+        }
+      }
+    }
     return {
       channels: [],
       formData: {
@@ -55,6 +73,10 @@ export default {
         title: [{
           required: true,
           message: '请填写标题'
+        }, {
+          min: 5,
+          max: 30,
+          message: '标题长度不够(5-30)'
         }],
         content: [{
           required: true,
@@ -63,6 +85,9 @@ export default {
         channel_id: [{
           required: true,
           message: '请选择频道'
+        }],
+        cover: [{
+          validator: func
         }]
       }
     }
