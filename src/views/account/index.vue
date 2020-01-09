@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import eventBus from '../../utils/events' // 公共vue实例
 export default {
   data () {
     return {
@@ -69,6 +70,7 @@ export default {
         data
       }).then(res => {
         this.loading = false
+        eventBus.$emit('updateUserInfo')
         this.getUserInfo()
       })
     },
@@ -82,6 +84,8 @@ export default {
             data: this.userInfo
           }).then(res => {
             this.$message({ type: 'success', message: '修改成功' })
+            // 保存成功后通知头部组件更新(eventBus)
+            eventBus.$emit('updateUserInfo')
           })
         }
       })

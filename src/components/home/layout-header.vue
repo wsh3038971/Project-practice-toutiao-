@@ -7,7 +7,7 @@
         </el-col>
         <!-- 右侧 -->
         <el-col :span="1.5" class="right">
-            <img class="head-img" :src="!userInfo.photo ? userInfo.photo : defaultImg">
+            <img class="head-img" :src="userInfo.photo ? userInfo.photo : defaultImg">
     <el-dropdown trigger="click" @command="handleMenu">
         <span class="el-dropdown-link">
           {{userInfo.name}}<i class="el-icon-arrow-down el-icon--right"></i>
@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import eventBus from '../../utils/events'
 export default {
   data () {
     return {
@@ -53,6 +54,9 @@ export default {
     }
   },
   created: function () {
+    eventBus.$on('updateUserInfo', () => {
+      this.getUserInfo()
+    })
     this.getUserInfo() // 获取用户信息
   }
 }
