@@ -1,10 +1,13 @@
 <template>
-    <el-card>
+    <el-card v-loading="loading">
         <bread-crumb slot="header">
             <template slot="title">
                 用户信息
             </template>
         </bread-crumb>
+        <el-upload action="" :http-request="uploadHeaderImg" :show-file-list="false">
+            <img class="header-img" :src="userInfo.photo || defaultImg" alt="">
+        </el-upload>
         <el-form ref="userForm" :model="userInfo" :rules="userRules" label-width="100px">
             <el-form-item label="用户名" prop="name">
                 <el-input v-model="userInfo.name" style="width: 300px"></el-input>
@@ -29,6 +32,8 @@
 export default {
   data () {
     return {
+      defaultImg: require('../../assets/img/404.png'),
+      loading: false,
       userInfo: {
         name: '',
         intro: '',
@@ -53,6 +58,20 @@ export default {
     }
   },
   methods: {
+    // 上传头像
+    uploadHeaderImg: function (params) {
+      this.loading = true
+      let data = new FormData()
+      data.append('photo', params.file)
+      this.$axios({
+        url: '/user/photo',
+        method: 'patch',
+        data
+      }).then(res => {
+        this.loading = false
+        this.getUserInfo()
+      })
+    },
     // 保存按钮
     saveUserInfo: function () {
       this.$refs.userForm.validate((isOk) => {
@@ -82,6 +101,12 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="less" scoped>
+.header-img {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    margin-left: 600px;
+}
 </style>
